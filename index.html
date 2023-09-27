@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DMS 321</title>
+  <style>
+  body {
+      background-color: rgb(90,190, 140);
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+    }
+    
+    .resource {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .button {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+    }
+    
+    .button:hover {
+      background-color: #45a049;
+    }
+    
+    #actions {
+      margin-bottom: 20px;
+    }
+    
+    #events {
+      margin-bottom: 20px;
+    }
+    
+    #events p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Manage Kingdom</h1>
+  
+  <div id="resources">
+    <div class="resource">
+      <span>Gold:</span>
+      <span id="gold">100</span>
+    </div>
+    <div class="resource">
+      <span>Food:</span>
+      <span id="food">100</span>
+    </div>
+    <div class="resource">
+      <span>Population:</span>
+      <span id="population">50</span>
+    </div>
+  </div>
+  
+  <div id="actions">
+    <h3>Actions:</h3>
+    <button class="button" onclick="collectTax()">Collect Tax</button>
+    <button class="button" onclick="buyFood()">Buy Food</button>
+    <button class="button" onclick="harvestFood()">Harvest Food</button>
+    <button class="button" onclick="buildHouses()">Build Houses</button>
+  </div>
+
+  
+  <div id="events">
+    <h3>Random Events:</h3>
+    <p id="eventMessage"></p>
+  </div>
+  
+  <a href="#" onclick="nextTurn()">Next Turn</a>
+
+
+  <br>
+  <br><br><br>Manage kingdom wisely!<br><br>Population updates based on food availability and housing<br><br>Click Next Turn for a chance at random events<br><br>Refresh to start over
+  <script>
+    // Game state variables
+    var gold = 100;
+    var food = 100;
+    var population = 10;
+    var houses = 5;
+    
+    function collectTax() {
+      gold += population * 10;
+      updateResources();
+    }
+    
+    function buyFood() {
+      if (gold >= 10) {
+        gold -= 10;
+        food += 20;
+        updateResources();
+      } else {
+        alert("Not enough gold to buy food!");
+      }
+    }
+    
+    function harvestFood() {
+      food += population * 5;
+      updateResources();
+    }
+    
+    function buildHouses() {
+      if (gold >= 50) {
+        gold -= 50;
+        houses += 1;
+        updateResources();
+      } else {
+        alert("Not enough gold to build houses!");
+      }
+    }
+    
+    function nextTurn() {
+      // Check for random events
+      var eventChance = Math.random();
+      if (eventChance < 0.3) {
+        var event = Math.floor(Math.random() * 5);
+        switch (event) {
+          case 0:
+            food -= population * 10;
+            document.getElementById("eventMessage").textContent = "A famine has struck! Food reserves are depleted.";
+            break;
+            case 1:
+population -= Math.floor(population / 2);
+document.getElementById("eventMessage").textContent = "A plague has broken out! Population has decreased.";
+break;
+case 2:
+gold -= Math.floor(gold / 2);
+document.getElementById("eventMessage").textContent = "An economic crisis has hit! Gold reserves have decreased.";
+break;
+case 3:
+var goldGain = Math.floor(Math.random() * 50) + 50;
+gold += goldGain;
+document.getElementById("eventMessage").textContent = "A treasure has been discovered! You gain " + goldGain + " gold.";
+break;
+case 4:
+var foodGain = Math.floor(Math.random() * 30) + 30;
+food += foodGain;
+document.getElementById("eventMessage").textContent = "A bountiful harvest! You gain " + foodGain + " food.";
+break;
+}
+updateResources();
+} else {
+document.getElementById("eventMessage").textContent = "";
+}
+        // Update population based on food availability and houses
+  if (food >= population) {
+    food -= population;
+    population += Math.floor(population / 10);
+  } else {
+    var famineDeaths = Math.floor(population / 4);
+    population -= famineDeaths;
+    food = 0;
+    alert(famineDeaths + " people died due to famine!");
+  }
+  
+  // Calculate available houses and manage population growth
+  var availableHouses = houses * 5;
+  if (population > availableHouses) {
+    var homeless = population - availableHouses;
+    population -= homeless;
+    alert(homeless + " people are homeless! Increase your housing capacity.");
+  }
+  
+  updateResources();
+}
+
+function updateResources() {
+  document.getElementById("gold").textContent = gold;
+  document.getElementById("food").textContent = food;
+  document.getElementById("population").textContent = population;
+
+}
+</script>
+</body>
+</html>
